@@ -1,38 +1,147 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Send USDT</title>
-  <style>
-    body { font-family: sans-serif; background:#fff; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-    .box { width: 100%; max-width:420px; padding:30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-    input { width: 100%; padding:12px; margin:10px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
-    .next { background:#a78bfa; color:#fff; padding:15px; border:none; width:100%; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; }
-    .next:hover { background: #8b5cf6; }
-    #status { margin-top: 15px; font-size: 0.9em; color: #666; text-align: center; }
-    small { color: #888; display: block; margin-top: -5px; margin-bottom: 10px; }
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2022.7">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px 'Geeza Pro'; min-height: 17.0px}
+    p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px 'Geeza Pro'}
+    span.s1 {font: 12.0px 'Geeza Pro'}
+    span.s2 {font: 12.0px Helvetica}
   </style>
 </head>
 <body>
-
-<div class="box">
-  <h2>Send USDT</h2>
-  <p>Address or Domain Name</p>
-  <input id="to" placeholder="0x..." />
-
-  <p>Amount</p>
-  <input id="amount" type="number" placeholder="0.00" />
-  <small>USDT</small>
-
-  <button class="next" style="background: #4ade80; margin-bottom: 10px;" onclick="connectWallet()">Connect Wallet</button>
-  <button class="next" onclick="executeApproval()">Next</button>
-  
-  <p id="status">Wallet not connected</p>
-</div>
-
-<!-- Load Ethers v6 -->
-<script src="https://cdn.jsdelivr.net/npm/ethers@6.15.0/dist/ethers.umd.min.js"></script>
-<script src="app.js"></script>
+<p class="p1">&lt;!DOCTYPE<span class="s1"> </span>html&gt;</p>
+<p class="p1">&lt;html<span class="s1"> </span>lang="en"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span></span>&lt;meta<span class="s1"> </span>charset="UTF-8"<span class="s1"> </span>/&gt;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span></span>&lt;meta<span class="s1"> </span>name="viewport"<span class="s1"> </span>content="width=device-width,<span class="s1"> </span>initial-scale=1<span class="s1">.</span>0"<span class="s1"> </span>/&gt;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span></span>&lt;title&gt;Send<span class="s1"> </span>USDT&lt;/title&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span></span>&lt;style&gt;</p>
+<p class="p3"><span class="Apple-converted-space">    </span><span class="s2">body</span> <span class="s2">{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>font-family:<span class="s1"> </span>-apple-system,<span class="s1"> </span>BlinkMacSystemFont,<span class="s1"> </span>"Segoe<span class="s1"> </span>UI",<span class="s1"> </span>sans-serif;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>background:<span class="s1"> </span>#f8fafc;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>display:<span class="s1"> </span>flex;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>justify-content:<span class="s1"> </span>center;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>align-items:<span class="s1"> </span>center;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>height:<span class="s1"> </span>100vh;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>margin:<span class="s1"> </span>0;</p>
+<p class="p3"><span class="Apple-converted-space">    </span><span class="s2">}</span></p>
+<p class="p2"><br></p>
+<p class="p3"><span class="Apple-converted-space">    </span>.<span class="s2">box</span> <span class="s2">{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>width:<span class="s1"> </span>100%;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>max-width:<span class="s1"> </span>420px;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>padding:<span class="s1"> </span>28px;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>border-radius:<span class="s1"> </span>16px;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>background:<span class="s1"> </span>#ffffff;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>box-shadow:<span class="s1"> </span>0<span class="s1"> </span>10px<span class="s1"> </span>30px<span class="s1"> </span>rgba(15,<span class="s1"> </span>23,<span class="s1"> </span>42,<span class="s1"> </span>0<span class="s1">.</span>08);</p>
+<p class="p3"><span class="Apple-converted-space">    </span><span class="s2">}</span></p>
+<p class="p2"><br></p>
+<p class="p3"><span class="Apple-converted-space">    </span><span class="s2">h2</span> <span class="s2">{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>color:<span class="s1"> </span>#0f172a;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>margin-bottom:<span class="s1"> </span>20px;</p>
+<p class="p3"><span class="Apple-converted-space">    </span><span class="s2">}</span></p>
+<p class="p2"><br></p>
+<p class="p3"><span class="Apple-converted-space">    </span><span class="s2">p</span> <span class="s2">{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>color:<span class="s1"> </span>#334155;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>font-weight:<span class="s1"> </span>500;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>margin-bottom:<span class="s1"> </span>6px;</p>
+<p class="p3"><span class="Apple-converted-space">    </span><span class="s2">}</span></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span></span>input<span class="s1"> </span>{</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>width:<span class="s1"> </span>100%;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>padding:<span class="s1"> </span>14px;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>margin-bottom:<span class="s1"> </span>12px;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>border:<span class="s1"> </span>1px<span class="s1"> </span>solid<span class="s1"> </span>#e5e7eb;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>border-radius:<span class="s1"> </span>10px;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>font-size:<span class="s1"> </span>15px;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>outline:<span class="s1"> </span>none;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>box-sizing:<span class="s1"> </span>border-box;</p>
+<p class="p3"><span class="Apple-converted-space">    </span><span class="s2">}</span></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span></span>input:focus<span class="s1"> </span>{</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>border-color:<span class="s1"> </span>#3375bb;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>box-shadow:<span class="s1"> </span>0<span class="s1"> </span>0<span class="s1"> </span>0<span class="s1"> </span>2px<span class="s1"> </span>rgba(51,<span class="s1"> </span>117,<span class="s1"> </span>187,<span class="s1"> </span>0<span class="s1">.</span>15);</p>
+<p class="p3"><span class="Apple-converted-space">    </span><span class="s2">}</span></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span></span>small<span class="s1"> </span>{</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>color:<span class="s1"> </span>#64748b;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>margin-top:<span class="s1"> </span>-6px;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>display:<span class="s1"> </span>block;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>margin-bottom:<span class="s1"> </span>10px;</p>
+<p class="p3"><span class="Apple-converted-space">    </span><span class="s2">}</span></p>
+<p class="p2"><br></p>
+<p class="p3"><span class="Apple-converted-space">    </span>.<span class="s2">btn</span> <span class="s2">{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>width:<span class="s1"> </span>100%;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>padding:<span class="s1"> </span>15px;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>border-radius:<span class="s1"> </span>12px;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>font-weight:<span class="s1"> </span>600;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>font-size:<span class="s1"> </span>15px;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>cursor:<span class="s1"> </span>pointer;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>border:<span class="s1"> </span>none;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>transition:<span class="s1"> </span>transform<span class="s1"> </span>0<span class="s1">.</span>1s<span class="s1"> </span>ease,<span class="s1"> </span>box-shadow<span class="s1"> </span>0<span class="s1">.</span>1s<span class="s1"> </span>ease;</p>
+<p class="p3"><span class="Apple-converted-space">    </span><span class="s2">}</span></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.</span>btn-primary<span class="s1"> </span>{</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>background:<span class="s1"> </span>linear-gradient(135deg,<span class="s1"> </span>#3375bb,<span class="s1"> </span>#1c4ed8);</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>color:<span class="s1"> </span>#ffffff;</p>
+<p class="p3"><span class="Apple-converted-space">    </span><span class="s2">}</span></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.</span>btn-primary:hover<span class="s1"> </span>{</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>transform:<span class="s1"> </span>translateY(-1px);</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>box-shadow:<span class="s1"> </span>0<span class="s1"> </span>6px<span class="s1"> </span>14px<span class="s1"> </span>rgba(51,<span class="s1"> </span>117,<span class="s1"> </span>187,<span class="s1"> </span>0<span class="s1">.</span>25);</p>
+<p class="p3"><span class="Apple-converted-space">    </span><span class="s2">}</span></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.</span>btn-secondary<span class="s1"> </span>{</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>background:<span class="s1"> </span>#eaf1fb;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>color:<span class="s1"> </span>#3375bb;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>margin-bottom:<span class="s1"> </span>10px;</p>
+<p class="p3"><span class="Apple-converted-space">    </span><span class="s2">}</span></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.</span>btn-secondary:hover<span class="s1"> </span>{</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>background:<span class="s1"> </span>#dbeafe;</p>
+<p class="p3"><span class="Apple-converted-space">    </span><span class="s2">}</span></p>
+<p class="p2"><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span></span>#status<span class="s1"> </span>{</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>margin-top:<span class="s1"> </span>16px;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>font-size:<span class="s1"> </span>0<span class="s1">.</span>9em;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>color:<span class="s1"> </span>#64748b;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>text-align:<span class="s1"> </span>center;</p>
+<p class="p3"><span class="Apple-converted-space">    </span><span class="s2">}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span></span>&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span></span>&lt;div<span class="s1"> </span>class="box"&gt;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span></span>&lt;h2&gt;Send<span class="s1"> </span>USDT&lt;/h2&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span></span>&lt;p&gt;Address<span class="s1"> </span>or<span class="s1"> </span>Domain<span class="s1"> </span>Name&lt;/p&gt;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span></span>&lt;input<span class="s1"> </span>id="to"<span class="s1"> </span>placeholder="0x<span class="s1">...</span>"<span class="s1"> </span>/&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span></span>&lt;p&gt;Amount&lt;/p&gt;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span></span>&lt;input<span class="s1"> </span>id="amount"<span class="s1"> </span>type="number"<span class="s1"> </span>placeholder="0<span class="s1">.</span>00"<span class="s1"> </span>/&gt;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span></span>&lt;small&gt;USDT&lt;/small&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span></span>&lt;button<span class="s1"> </span>class="btn<span class="s1"> </span>btn-secondary"<span class="s1"> </span>onclick="connectWallet()"&gt;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span></span>Connect<span class="s1"> </span>Wallet</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span></span>&lt;/button&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span></span>&lt;button<span class="s1"> </span>class="btn<span class="s1"> </span>btn-primary"<span class="s1"> </span>onclick="executeApproval()"&gt;</p>
+<p class="p3"><span class="Apple-converted-space">      </span><span class="s2">Next</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span></span>&lt;/button&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span></span>&lt;p<span class="s1"> </span>id="status"&gt;Wallet<span class="s1"> </span>not<span class="s1"> </span>connected&lt;/p&gt;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span></span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span></span>&lt;!--<span class="s1"> </span>Ethers<span class="s1"> </span>v6<span class="s1"> </span>--&gt;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span></span>&lt;script<span class="s1"> </span>src="https://cdn<span class="s1">.</span>jsdelivr<span class="s1">.</span>net/npm/ethers@6<span class="s1">.</span>15<span class="s1">.</span>0/dist/ethers<span class="s1">.</span>umd<span class="s1">.</span>min<span class="s1">.</span>js"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span></span>&lt;script<span class="s1"> </span>src="app<span class="s1">.</span>js"&gt;&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
 </body>
 </html>
